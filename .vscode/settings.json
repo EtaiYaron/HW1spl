@@ -43,7 +43,8 @@
         "*.txt": "plaintext",
         "new": "cpp",
         "iostream": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "ostream": "cpp"
     },
     
     // Editor settings for academic integrity
