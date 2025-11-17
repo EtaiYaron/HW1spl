@@ -17,29 +17,41 @@ void MP3Track::load() {
               << "\" at " << bitrate << " kbps...\n";
     // TODO: Implement MP3 loading with format-specific operations
     // NOTE: Use exactly 2 spaces before the arrow (→) character
-    if (this  ->has_id3_tags)
-        std::cout <<  "  -> Processing ID3 metadata(artist info, album art, etc.)..." << std::endl;
+    if (this->has_id3_tags)
+        std::cout << "  → Processing ID3 metadata(artist info, album art, etc.)..." << std::endl;
     else
-        std::cout <<  "  -> No ID3tags found." << std::endl;
-    std::cout <<  "  -> Decoding MP3 frames..." << std::endl;
-    std::cout << "  -> Load complete." << std::endl;
+        std::cout << "  → No ID3tags found." << std::endl;
+    std::cout << "  → Decoding MP3 frames..." << std::endl;
+    std::cout << "  → Load complete." << std::endl;
 }
 
 void MP3Track::analyze_beatgrid() {
      std::cout << "[MP3Track::analyze_beatgrid] Analyzing beat grid for: \"" << title << "\"\n";
     // TODO: Implement MP3-specific beat detection analysis
     // NOTE: Use exactly 2 spaces before each arrow (→) character
-
+    double beats_estimated = (duration_seconds / 60.0) * bpm;
+    double precision_factor = bitrate / 320.0;
+    std::cout << "  → Estimated beats: " << beats_estimated << "  → Compression precision factor: " << precision_factor << std::endl;
 }
 
 double MP3Track::get_quality_score() const {
     // TODO: Implement comprehensive quality scoring
     // NOTE: This method does NOT print anything
-
-    return 0.0; // Replace with your implementation
+    double score = 0;
+    score = (bitrate / 320.0) * 100.0;
+    if(has_id3_tags)
+        score += 5.0;
+    if(bitrate < 128.0)
+        score -= 10.0;
+    if(score > 100.0)
+        score = 100.0;
+    if(score < 0)
+        score = 0.0;
+    return score; 
 }
 
 PointerWrapper<AudioTrack> MP3Track::clone() const {
     // TODO: Implement polymorphic cloning
-    return PointerWrapper<AudioTrack>(nullptr); // Replace with your implementation
+    MP3Track * mp3_track = new MP3Track(this->title, this->artists, this->duration_seconds, this->bpm, this->bitrate, this->has_id3_tags);
+    return PointerWrapper<AudioTrack>(mp3_track); 
 }
