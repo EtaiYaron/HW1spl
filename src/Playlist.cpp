@@ -6,6 +6,44 @@ Playlist::Playlist(const std::string& name)
     : head(nullptr), playlist_name(name), track_count(0) {
     std::cout << "Created playlist: " << name << std::endl;
 }
+//implementing rule of 3:
+/*
+Playlist::Playlist(const Playlist& other) 
+    : playlist_name(other.playlist_name), track_count(other.track_count), head(nullptr) 
+{
+    if (other.head == nullptr) {
+        return; 
+    }
+    head = new PlaylistNode(new AudioTrack(*other.head->track)); 
+    PlaylistNode* otherCurr = other.head->next;
+    PlaylistNode* myCurr = head;
+    while (otherCurr != nullptr) {
+        myCurr->next = new PlaylistNode(new AudioTrack(*otherCurr->track));
+                myCurr = myCurr->next;
+        otherCurr = otherCurr->next;
+    }
+}
+
+Playlist& Playlist::operator=(const Playlist& other){
+    this->playlist_name = other.playlist_name;
+    this->track_count = other.track_count;
+    this->head = nullptr;
+    if (other.head == nullptr) {
+        return *this; 
+    }
+    head = new PlaylistNode(new AudioTrack(*other.head->track)); 
+    PlaylistNode* otherCurr = other.head->next;
+    PlaylistNode* myCurr = head;
+    while (otherCurr != nullptr) {
+        myCurr->next = new PlaylistNode(new AudioTrack(*otherCurr->track));
+                myCurr = myCurr->next;
+        otherCurr = otherCurr->next;
+    }
+    return *this;
+}
+*/
+
+
 // TODO: Fix memory leaks!
 // Students must fix this in Phase 1
 Playlist::~Playlist() {

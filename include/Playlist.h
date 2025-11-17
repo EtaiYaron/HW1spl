@@ -35,6 +35,17 @@ public:
      */
     Playlist(const std::string& name="");
 
+    /*
+        copy Constructor 
+    */
+    Playlist(const Playlist& other);
+
+    /*
+        copy Operator
+    */
+
+    Playlist& operator=(const Playlist& other);
+
     /**
      * Destructor
      */
