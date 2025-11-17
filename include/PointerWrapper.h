@@ -16,16 +16,7 @@
 template<typename T>
 class PointerWrapper {
 private:
-    T* ptr;  // Raw pointer to the managed object
-    int* ref_count;
-
-    void checkIfDelete()
-    {
-        if (*ref_count == 0) {
-            delete ptr;
-            delete ref_count;
-        }
-    }
+    T* ptr;  
 
 public:
     // ========== CONSTRUCTION AND DESTRUCTION ==========
@@ -33,12 +24,12 @@ public:
     /**
      * Default constructor - creates empty wrapper
      */
-    PointerWrapper() : ptr(nullptr), ref_count(nullptr) {}
+    PointerWrapper() : ptr(nullptr) {}
 
     /**
      * Constructor from raw pointer - wraps the pointer
      */
-    explicit PointerWrapper(T* p) : ptr(p), ref_count(new int(1)) {}
+    explicit PointerWrapper(T* p) : ptr(p) {}
 
     /**
      * TODO: Implement destructor
@@ -48,8 +39,7 @@ public:
      */
     ~PointerWrapper() 
     {
-        *ref_count--;
-        checkIfDelete();
+        delete ptr;
     };
 
     // ========== COPY OPERATIONS (DELETED) ==========
@@ -73,13 +63,10 @@ public:
      * HINT: How should ownership transfer from one wrapper to another?
      * What should happen to the source wrapper after the move?
      */
-    PointerWrapper(PointerWrapper&& other) noexcept : ptr(other.ptr), ref_count(other.ref_count)
+    PointerWrapper(PointerWrapper&& other) noexcept : ptr(other.ptr)
     {
         other.ptr = nullptr;
-        other.ref_count = 0;
-
-        //*ref_count++;
-    };
+    }
 
     /**
      * TODO: Implement move assignment operator
@@ -89,15 +76,9 @@ public:
     PointerWrapper& operator=(PointerWrapper&& other) noexcept 
     {
         if(this != &other) {
-            *ref_count--;
-            checkIfDelete();
-            
+            delete ptr;
             ptr = other.ptr;
-            ref_count = other.ref_count;
-            //*ref_count++;
-
             other.ptr = nullptr;
-            other.ref_count = 0;
         }
         return *this;
     };
@@ -134,7 +115,7 @@ public:
     T* get() const {
         if (!ptr)
             throw std::runtime_error("ptr is nullptr");
-        return ptr; // Placeholder
+        return ptr;
     }
 
     // ========== OWNERSHIP MANAGEMENT ==========
@@ -147,7 +128,6 @@ public:
     T* release() {
         T* ret = ptr;
         this->ptr = nullptr;
-        this->ref_count = nullptr;
         return ret;
     }
 
@@ -159,7 +139,6 @@ public:
     void reset(T* new_ptr = nullptr) {
         delete ptr;
         ptr = new_ptr;
-        *ref_count = 1;
     }
 
     // ========== UTILITY FUNCTIONS ==========
@@ -170,7 +149,7 @@ public:
      * Why might the explicit keyword be important here?
      */
     explicit operator bool() const {
-        return false; //placeholder
+        return ptr != nullptr;
     }
 
     /**
@@ -201,9 +180,7 @@ PointerWrapper<T> make_pointer_wrapper(Args&&... args) {
  */
 template<typename T>
 void swap(PointerWrapper<T>& lhs, PointerWrapper<T>& rhs) noexcept {
-    // TODO: Implement global swap function
-    // HINT: You can use the member swap function
-    //your code here...
+    lhs.swap(rhs);
 }
 
 #endif // POINTERWRAPPER_H
