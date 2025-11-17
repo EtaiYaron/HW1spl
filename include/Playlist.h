@@ -16,10 +16,10 @@
  */
 
 struct PlaylistNode {
-    AudioTrack* track; 
+    AudioTrack& track; 
     PlaylistNode* next;
 
-    PlaylistNode(AudioTrack* t) : track(t), next(nullptr) {}
+    PlaylistNode(AudioTrack& t) : track(t), next(nullptr) {}
     ~PlaylistNode() = default;
 };
 
@@ -44,7 +44,7 @@ public:
      * Add a track to the playlist
      * @param track Pointer to AudioTrack to add
      */
-    void add_track(AudioTrack* track);
+    void add_track(AudioTrack& track);
 
     /**
      * Remove a track by title
@@ -69,7 +69,7 @@ public:
      * @brief Find a track by title
      * @return Pointer to the found track, or nullptr if not found
      */
-    AudioTrack* find_track(const std::string& title) const;
+    AudioTrack& find_track(const std::string& title) const;
 
     /**
      * Check if playlist is empty
@@ -84,7 +84,7 @@ public:
     /**
      * Get all tracks as a vector
      */
-    std::vector<AudioTrack*> getTracks() const;
+    std::vector<AudioTrack&> getTracks() const;
 
 };
 

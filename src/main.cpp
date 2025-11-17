@@ -23,7 +23,7 @@
  * Students must fix the issues to make this program run cleanly.
  */
 
-bool del = false; // hint: what is the purpose of this variable? how it changes the ownership semantics?
+bool del = true; // hint: what is the purpose of this variable? how it changes the ownership semantics?
 void test_phase_1_memory_leaks() {
     
     std::cout << "\n======== PHASE 1: MEMORY LEAK TESTING ========" << std::endl;
@@ -38,8 +38,8 @@ void test_phase_1_memory_leaks() {
     std::cout << "Creating playlist..." << std::endl;
     Playlist* my_playlist = new Playlist("Chill House Mix");
 
-    my_playlist->add_track(mp3);
-    my_playlist->add_track(wav);
+    my_playlist->add_track(*mp3);
+    my_playlist->add_track(*wav);
     my_playlist->display();
 
     // Remove a track (this will leak if remove_track is broken)

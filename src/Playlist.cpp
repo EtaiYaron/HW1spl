@@ -14,11 +14,7 @@ Playlist::~Playlist() {
     #endif
 }
 
-void Playlist::add_track(AudioTrack* track) {
-    if (!track) {
-        std::cout << "[Error] Cannot add null track to playlist" << std::endl;
-        return;
-    }
+void Playlist::add_track(AudioTrack& track) {
 
     // Create new node - this allocates memory!
     PlaylistNode* new_node = new PlaylistNode(track);
@@ -28,7 +24,7 @@ void Playlist::add_track(AudioTrack* track) {
     head = new_node;
     track_count++;
 
-    std::cout << "Added '" << track->get_title() << "' to playlist '" 
+    std::cout << "Added '" << track.get_title() << "' to playlist '" 
               << playlist_name << "'" << std::endl;
 }
 
@@ -37,7 +33,7 @@ void Playlist::remove_track(const std::string& title) {
     PlaylistNode* prev = nullptr;
 
     // Find the track to remove
-    while (current && current->track->get_title() != title) {
+    while (current && current->track.get_title() != title) {
         prev = current;
         current = current->next;
     }
@@ -66,7 +62,7 @@ void Playlist::display() const {
     int index = 1;
 
     while (current) {
-        std::vector<std::string> artists = current->track->get_artists();
+        std::vector<std::string> artists = current->track.get_artists();
         std::string artist_list;
 
         std::for_each(artists.begin(), artists.end(), [&](const std::string& artist) {
@@ -76,11 +72,11 @@ void Playlist::display() const {
             artist_list += artist;
         });
 
-        AudioTrack* track = current->track;
-        std::cout << index << ". " << track->get_title() 
+        AudioTrack& track = current->track;
+        std::cout << index << ". " << track.get_title() 
                   << " by " << artist_list
-                  << " (" << track->get_duration() << "s, " 
-                  << track->get_bpm() << " BPM)" << std::endl;
+                  << " (" << track.get_duration() << "s, " 
+                  << track.get_bpm() << " BPM)" << std::endl;
         current = current->next;
         index++;
     }
@@ -91,17 +87,17 @@ void Playlist::display() const {
     std::cout << "========================\n" << std::endl;
 }
 
-AudioTrack* Playlist::find_track(const std::string& title) const {
+AudioTrack& Playlist::find_track(const std::string& title) const {
     PlaylistNode* current = head;
 
     while (current) {
-        if (current->track->get_title() == title) {
+        if (current->track.get_title() == title) {
             return current->track;
         }
         current = current->next;
     }
 
-    return nullptr;
+    return ;
 }
 
 int Playlist::get_total_duration() const {
@@ -109,19 +105,18 @@ int Playlist::get_total_duration() const {
     PlaylistNode* current = head;
 
     while (current) {
-        total += current->track->get_duration();
+        total += current->track.get_duration();
         current = current->next;
     }
 
     return total;
 }
 
-std::vector<AudioTrack*> Playlist::getTracks() const {
-    std::vector<AudioTrack*> tracks;
+std::vector<AudioTrack&> Playlist::getTracks() const {
+    std::vector<AudioTrack&> tracks;
     PlaylistNode* current = head;
     while (current) {
-        if (current->track)
-            tracks.push_back(current->track);
+        tracks.push_back(current->track);
         current = current->next;
     }
     return tracks;
