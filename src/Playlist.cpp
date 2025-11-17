@@ -11,12 +11,14 @@ Playlist::Playlist(const std::string& name)
 Playlist::~Playlist() {
     //#ifdef DEBUG
     std::cout << "Destroying playlist: " << playlist_name << std::endl;
-    while (this->head != nullptr) {
-        PlaylistNode* next1 = this->head->next;
-        delete (this->head->track);
-        delete(this->head);
-        this->head = next1;
+    PlaylistNode* tmp = this->head;
+    while (tmp) {
+        PlaylistNode* next1 = tmp->next;
+        delete (tmp->track);
+        delete(tmp);
+        tmp = next1;
     }
+    this -> head = nullptr;
     //#endif
 }
 
