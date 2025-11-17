@@ -35,7 +35,7 @@ AudioTrack::~AudioTrack() {
     //#ifdef DEBUG
     std::cout << "AudioTrack destructor called for: " << title << std::endl;    
     //#endif
-    delete [](this->waveform_data);
+    delete this->waveform_data;
 }
 
 AudioTrack::AudioTrack(const AudioTrack& other) : title(other.title), artists(other.artists), duration_seconds(other.duration_seconds),
