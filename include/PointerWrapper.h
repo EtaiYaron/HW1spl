@@ -17,6 +17,15 @@ template<typename T>
 class PointerWrapper {
 private:
     T* ptr;  // Raw pointer to the managed object
+    int* ref_count;
+
+    void checkIfDelete()
+    {
+        if (*ref_count == 0) {
+            delete ptr;
+            delete ref_count;
+        }
+    }
 
 public:
     // ========== CONSTRUCTION AND DESTRUCTION ==========
@@ -24,12 +33,12 @@ public:
     /**
      * Default constructor - creates empty wrapper
      */
-    PointerWrapper() : ptr(nullptr) {}
+    PointerWrapper() : ptr(nullptr), ref_count(nullptr) {}
 
     /**
      * Constructor from raw pointer - wraps the pointer
      */
-    explicit PointerWrapper(T* p) : ptr(p) {}
+    explicit PointerWrapper(T* p) : ptr(p), ref_count(new int(1)) {}
 
     /**
      * TODO: Implement destructor
@@ -37,7 +46,11 @@ public:
      * Think about ownership and resource management.
      * Is the default destructor sufficient here?
      */
-    ~PointerWrapper() =default;
+    ~PointerWrapper() 
+    {
+        *ref_count--;
+        checkIfDelete();
+    };
 
     // ========== COPY OPERATIONS (DELETED) ==========
 
@@ -60,16 +73,34 @@ public:
      * HINT: How should ownership transfer from one wrapper to another?
      * What should happen to the source wrapper after the move?
      */
-    PointerWrapper(PointerWrapper&& other) noexcept {}
+    PointerWrapper(PointerWrapper&& other) noexcept : ptr(other.ptr), ref_count(other.ref_count)
+    {
+        other.ptr = nullptr;
+        other.ref_count = 0;
+
+        //*ref_count++;
+    };
 
     /**
      * TODO: Implement move assignment operator
      * HINT: Handle cleanup of current resource and ownership transfer
      * Don't forget about self-assignment!
      */
-    PointerWrapper& operator=(PointerWrapper&& other) noexcept {
+    PointerWrapper& operator=(PointerWrapper&& other) noexcept 
+    {
+        if(this != &other) {
+            *ref_count--;
+            checkIfDelete();
+            
+            ptr = other.ptr;
+            ref_count = other.ref_count;
+            //*ref_count++;
+
+            other.ptr = nullptr;
+            other.ref_count = 0;
+        }
         return *this;
-    }
+    };
 
     // ========== ACCESS OPERATIONS ==========
 
@@ -80,6 +111,8 @@ public:
      */
 
     T& operator*() const {
+        if (!ptr)
+            throw std::runtime_error("ptr is nullptr");
         return *ptr;
     };
 
@@ -89,7 +122,7 @@ public:
      * What safety checks should you perform?
      */
     T* operator->() const {
-        return nullptr;
+        return ptr;
     }
 
     /**
@@ -99,7 +132,9 @@ public:
      * @throws std::runtime_error if ptr is null
      */
     T* get() const {
-        return nullptr; // Placeholder
+        if (!ptr)
+            throw std::runtime_error("ptr is nullptr");
+        return ptr; // Placeholder
     }
 
     // ========== OWNERSHIP MANAGEMENT ==========
@@ -110,7 +145,10 @@ public:
      * Should the wrapper still own the pointer after calling release()?
      */
     T* release() {
-        return nullptr;
+        T* ret = ptr;
+        this->ptr = nullptr;
+        this->ref_count = nullptr;
+        return ret;
     }
 
     /**
@@ -119,6 +157,9 @@ public:
      * What should happen to the old pointer?
      */
     void reset(T* new_ptr = nullptr) {
+        delete ptr;
+        ptr = new_ptr;
+        *ref_count = 1;
     }
 
     // ========== UTILITY FUNCTIONS ==========
