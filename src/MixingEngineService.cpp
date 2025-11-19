@@ -7,16 +7,24 @@
  * TODO: Implement MixingEngineService constructor
  */
 MixingEngineService::MixingEngineService()
-    : active_deck(0)
+    : active_deck(0), auto_sync(false), bpm_tolerance(0)
 {
-    // Your implementation here
+    decks[0] = nullptr;
+    decks[1] = nullptr;
+    std::cout << "[MixingEngineService] Initialized with 2 empty decks" << std::endl;
 }
 
 /**
  * TODO: Implement MixingEngineService destructor
  */
 MixingEngineService::~MixingEngineService() {
-    // Your implementation here
+    std::cout << "[MixingEngineService] Cleaning up decks..." << std::endl;
+    for (int i = 0; i < 2; i++) {
+        if (decks[i]) {
+            delete[] decks[i];
+            decks[i] = nullptr;
+        }
+    }
 }
 
 
@@ -26,8 +34,28 @@ MixingEngineService::~MixingEngineService() {
  * @return: Index of the deck where track was loaded, or -1 on failure
  */
 int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
-    // Your implementation here
-    return -1; // Placeholder
+    std::cout << "\n=== Loading Track to Deck ===" << std::endl;
+
+    AudioTrack* cloned_track = track.clone().get();
+    PointerWrapper<AudioTrack> wrapped_track(cloned_track);
+    if (!wrapped_track.get()) {
+        std::cout << "[ERROR] Track: \"" << track.get_title() << "\" failed to clone" << std::endl;
+        return -1;
+    }
+
+    size_t target_deck = 1 - active_deck;
+    if (decks[0] == nullptr && decks[1] == nullptr) {
+        target_deck = 0; 
+        active_deck = 0; 
+    }
+    std::cout << "[Deck Switch] Target deck: " << target_deck << std::endl;
+
+    if (decks[target_deck] != nullptr) {
+        delete decks[target_deck];
+        decks[target_deck] = nullptr;
+    }
+    wrapped_track->load();
+    wrapped_track->analyze_beatgrid();
 }
 
 /**
