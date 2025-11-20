@@ -71,14 +71,13 @@ Playlist& DJLibraryService::getPlaylist() {
  * HINT: Leverage Playlist's find_track method
  */
 AudioTrack* DJLibraryService::findTrack(const std::string& track_title) {
-    // Your implementation here
-    return nullptr; // Placeholder
+    return playlist.find_track(track_title);
 }
 
 void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name, const std::vector<int>& track_indices) {
 
     std::cout << "[INFO] Loading playlist: " << playlist_name << std::endl;
-    Playlist* playlist = new Playlist(playlist_name);
+    playlist = Playlist(playlist_name);
     int cnt =0;
     for(int idx : track_indices){
         if(idx < 1 || idx > library.size()){
@@ -95,7 +94,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
                 AudioTrack* track = track_wrapper.get();
                 track->load();
                 track->analyze_beatgrid();
-                playlist->add_track(track);
+                playlist.add_track(track);
                 std::cout << "Added '" << track->get_title() << "' to playlist '" << playlist_name << "'\n";
                 cnt++;
             }
@@ -111,6 +110,11 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
  * @return Vector of track titles in the playlist
  */
 std::vector<std::string> DJLibraryService::getTrackTitles() const {
-    // Your implementation here
-    return std::vector<std::string>(); // Placeholder
+    std::vector<std::string> tracks_titles = std::vector<std::string>();
+    for(AudioTrack* track : library){
+        if(track != nullptr){
+            tracks_titles.push_back(track->get_title());
+        }
+    }
+    return tracks_titles;
 }
