@@ -121,6 +121,6 @@ void MixingEngineService::sync_bpm(const PointerWrapper<AudioTrack>& track) cons
     int bpm1 = track->get_bpm();
     double avg = (bpm1+bpm_tolerance)/2;
     int newbpm = (int) (avg);
-    //track->bpm = newbpm;
-    //std::cout << "[Sync BPM] Syncing BPM from" << bpm1 << "to" << newbpm << std::endl;
+    track->set_bpm(newbpm);
+    std::cout << "[Sync BPM] Syncing BPM from " << bpm1 << " to " << newbpm << std::endl;
 }

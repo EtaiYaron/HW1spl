@@ -7,41 +7,54 @@ Playlist::Playlist(const std::string& name)
     std::cout << "Created playlist: " << name << std::endl;
 }
 //implementing rule of 3:
-/*
+
 Playlist::Playlist(const Playlist& other) 
     : playlist_name(other.playlist_name), track_count(other.track_count), head(nullptr) 
 {
     if (other.head == nullptr) {
         return; 
     }
-    head = new PlaylistNode(new AudioTrack(*other.head->track)); 
+    PointerWrapper<AudioTrack> headWrapper = other.head->track->clone();
+    head = new PlaylistNode(headWrapper.release()); 
     PlaylistNode* otherCurr = other.head->next;
     PlaylistNode* myCurr = head;
     while (otherCurr != nullptr) {
-        myCurr->next = new PlaylistNode(new AudioTrack(*otherCurr->track));
-                myCurr = myCurr->next;
+        PointerWrapper<AudioTrack> nodeWrapper = otherCurr->track->clone();
+        myCurr->next = new PlaylistNode(nodeWrapper.release());
+        myCurr = myCurr->next;
         otherCurr = otherCurr->next;
     }
 }
 
-Playlist& Playlist::operator=(const Playlist& other){
+Playlist& Playlist::operator=(const Playlist& other) {
+    if (this == &other) {
+        return *this;
+    }
+    PlaylistNode* current = head;
+    while (current != nullptr) {
+        PlaylistNode* next = current->next;
+        delete current; 
+        current = next;
+    }
+    head = nullptr;
     this->playlist_name = other.playlist_name;
     this->track_count = other.track_count;
-    this->head = nullptr;
     if (other.head == nullptr) {
         return *this; 
     }
-    head = new PlaylistNode(new AudioTrack(*other.head->track)); 
+    PointerWrapper<AudioTrack> headWrapper = other.head->track->clone();
+    head = new PlaylistNode(headWrapper.release()); 
     PlaylistNode* otherCurr = other.head->next;
     PlaylistNode* myCurr = head;
     while (otherCurr != nullptr) {
-        myCurr->next = new PlaylistNode(new AudioTrack(*otherCurr->track));
-                myCurr = myCurr->next;
+        PointerWrapper<AudioTrack> nodeWrapper = otherCurr->track->clone();
+        myCurr->next = new PlaylistNode(nodeWrapper.release());
+        myCurr = myCurr->next;
         otherCurr = otherCurr->next;
     }
     return *this;
 }
-*/
+
 
 
 // TODO: Fix memory leaks!
