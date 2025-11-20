@@ -39,7 +39,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     AudioTrack* cloned_track = track.clone().get();
     PointerWrapper<AudioTrack> wrapped_track(cloned_track);
     if (!wrapped_track.get()) {
-        std::cout << "[ERROR] Track: \"" << track.get_title() << "\" failed to clone" << std::endl;
+        std::cerr << "[ERROR] Track: \"" << track.get_title() << "\" failed to clone" << std::endl;
         return -1;
     }
 
@@ -56,6 +56,26 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     }
     wrapped_track->load();
     wrapped_track->analyze_beatgrid();
+
+    if (decks[active_deck] != nullptr && auto_sync) {
+        if (std::abs(decks[active_deck]->get_bpm() - wrapped_track->get_bpm()) > bpm_tolerance)
+        {
+            sync_bpm(wrapped_track);
+        }
+    }
+
+    AudioTrack* released_track = wrapped_track.release();
+    decks[target_deck] = released_track;
+    std::cout << "[Load Complete] '" << released_track->get_title() << "' is now loaded on deck " << target_deck << std::endl;
+
+    if (decks[active_deck] != nullptr) {
+        std::cout << " [Unload] Unloading previous deck " << active_deck << "(" << decks[active_deck]->get_title() << ")" << std::endl;
+        delete decks[active_deck];
+        decks[active_deck] = nullptr;
+    }
+    active_deck = target_deck;
+    std::cout << "[Active Deck] Switched to deck " << target_deck << std::endl;
+    return target_deck;
 }
 
 /**
