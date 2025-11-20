@@ -14,17 +14,26 @@ DJLibraryService::DJLibraryService(const Playlist& playlist)
  * @param library_tracks Vector of track info from config
  */
 void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>& library_tracks) {
+    library = std::vector<AudioTrack*>(library_tracks.size());
     //Todo: Implement buildLibrary method
     std::cout << "TODO: Implement DJLibraryService::buildLibrary method\n"<< library_tracks.size() << " tracks to be loaded into library.\n";
+    int cnt = 0;
     for (int i = 0; i < library_tracks.size(); i++) {
         SessionConfig::TrackInfo track = library_tracks[i];
         if (track.type == "MP3") {
-            AudioTrack* mp3_track = new MP3Track(track.title, track.artists, track.duration_seconds, track.bpm, track.extra_param1, track.extra_param2);
+            MP3Track* mp3_track = new MP3Track(track.title, track.artists, track.duration_seconds, track.bpm, track.extra_param1, track.extra_param2);
+            library[i] = mp3_track;
+            std::cout << "MP3: MP3Track created: " << mp3_track->get_bitrate() << " kbps\n"; 
+            cnt++;
         }
         else if (library_tracks[i].type == "WAV") {
-
+            WAVTrack* wav_track = new WAVTrack(track.title, track.artists, track.duration_seconds, track.bpm, track.extra_param1, track.extra_param2);
+            library[i] = wav_track;
+            std::cout << "WAV: WAVTrack created: " << wav_track->get_sample_rate() << "Hz/" <<wav_track->get_bit_depth() << "bit\n";
+            cnt++;
         }
     }
+    std::cout << "[INFO] Track library built: "<< cnt << " tracks loaded\n";
 }
 
 /**
