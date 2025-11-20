@@ -21,7 +21,7 @@ MixingEngineService::~MixingEngineService() {
     std::cout << "[MixingEngineService] Cleaning up decks..." << std::endl;
     for (int i = 0; i < 2; i++) {
         if (decks[i]) {
-            delete[] decks[i];
+            delete decks[i];
             decks[i] = nullptr;
         }
     }
