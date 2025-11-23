@@ -96,6 +96,7 @@ public:
     void simulate_dj_performance();
 
 
+
     // ========== STATUS & DISPLAY METHODS ==========
 
     const std::string& get_session_name() const { return session_name; }
@@ -120,4 +121,8 @@ private:
      * @brief Print final session summary with statistics
      */
     void print_session_summary() const;
+
+
+    //we added this function to make simulate_dj_performance readable and usefull
+    void process_playlist(const std::string&);
 };

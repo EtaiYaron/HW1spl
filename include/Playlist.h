@@ -38,13 +38,13 @@ public:
     /*
         copy Constructor 
     */
-    //Playlist(const Playlist& other);
+    Playlist(const Playlist& other);
 
     /*
         copy Operator
     */
 
-    //Playlist& operator=(const Playlist& other);
+    Playlist& operator=(const Playlist& other);
 
     /**
      * Destructor
