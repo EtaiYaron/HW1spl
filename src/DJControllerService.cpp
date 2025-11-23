@@ -23,7 +23,7 @@ int DJControllerService::loadTrackToCache(AudioTrack& track) {
 
     track_clone->load();
     track_clone->analyze_beatgrid();
-    PointerWrapper<AudioTrack> new_ptr(track_clone.get());
+    PointerWrapper<AudioTrack> new_ptr(track_clone.release());
     if (cache.put(std::move(new_ptr)))
         return -1;
     return 0;

@@ -91,7 +91,7 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
                 continue;
             }
             else{
-                AudioTrack* track = track_wrapper.get();
+                AudioTrack* track = track_wrapper.release();
                 track->load();
                 track->analyze_beatgrid();
                 playlist.add_track(track);
