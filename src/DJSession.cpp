@@ -171,7 +171,7 @@ void DJSession::process_playlist(const std::string& name){
     }
     else{
         for(std::string track_title : track_titles){
-            std::cout << " \n–- Processing: " << track_title << " –-\n";
+            std::cout << " \n-- Processing: " << track_title << " --\n";
             stats.tracks_processed++;
             int val = load_track_to_controller(track_title);
             //it is alredy updated and logged in load_track_to_controller

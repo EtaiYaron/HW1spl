@@ -21,7 +21,7 @@ MixingEngineService::~MixingEngineService() {
     std::cout << "[MixingEngineService] Cleaning up decks..." << std::endl;
     for (int i = 0; i < 2; i++) {
         if (decks[i]) {
-            delete[] decks[i];
+            delete decks[i];
             decks[i] = nullptr;
         }
     }
@@ -36,12 +36,13 @@ MixingEngineService::~MixingEngineService() {
 int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     std::cout << "\n=== Loading Track to Deck ===" << std::endl;
 
-    AudioTrack* cloned_track = track.clone().get();
-    PointerWrapper<AudioTrack> wrapped_track(cloned_track);
-    if (!wrapped_track.get()) {
+    PointerWrapper<AudioTrack> temp_ptr = track.clone();
+    if (!temp_ptr) {
         std::cerr << "[ERROR] Track: \"" << track.get_title() << "\" failed to clone" << std::endl;
         return -1;
     }
+    AudioTrack* cloned_track = temp_ptr.release();
+    PointerWrapper<AudioTrack> wrapped_track(cloned_track);
 
     size_t target_deck = 1 - active_deck;
     if (decks[0] == nullptr && decks[1] == nullptr) {
