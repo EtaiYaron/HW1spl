@@ -15,7 +15,7 @@ void WAVTrack::load() {
     // TODO: Implement realistic WAV loading simulation
     // NOTE: Use exactly 2 spaces before the arrow (→) character
 
-    std::cout << "[WAVTrack::load] Loading WAV: " << title << " at " << sample_rate << "Hz/" << bit_depth << "bit (uncompressed)..." << std::endl;
+    std::cout << "[WAVTrack::load] Loading WAV: \"" << title << "\" at " << sample_rate << "Hz/" << bit_depth << "bit (uncompressed)..." << std::endl;
     long long size  = duration_seconds * sample_rate * (bit_depth / 8) * 2;
     std::cout << "  → Estimated file size: " << size << " bytes" << std::endl;
     std::cout << "  → Fast loading due to uncompressed format." << std::endl;
@@ -54,6 +54,6 @@ double WAVTrack::get_quality_score() const {
 
 PointerWrapper<AudioTrack> WAVTrack::clone() const {
     // TODO: Implement the clone method
-    WAVTrack * wav_track = new WAVTrack(this->title, this->artists, this->duration_seconds, this->bpm, this->sample_rate, this->bit_depth );
+    WAVTrack * wav_track = new WAVTrack(*this);
     return PointerWrapper<AudioTrack>(wav_track); 
 }

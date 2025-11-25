@@ -31,11 +31,11 @@ AudioTrack::AudioTrack(const std::string& title, const std::vector<std::string>&
 // ========== TODO: STUDENTS IMPLEMENT RULE OF 5 ==========
 
 AudioTrack::~AudioTrack() {
-    // TODO: Implement the destructor
+    delete[] this->waveform_data;
     //#ifdef DEBUG
     std::cout << "AudioTrack destructor called for: " << title << std::endl;    
     //#endif
-    delete[] this->waveform_data;
+    
 }
 
 AudioTrack::AudioTrack(const AudioTrack& other) : title(other.title), artists(other.artists), duration_seconds(other.duration_seconds),

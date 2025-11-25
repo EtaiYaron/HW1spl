@@ -65,6 +65,7 @@ public:
      */
     PointerWrapper(PointerWrapper&& other) noexcept : ptr(other.ptr)
     {
+        std::cout << "Move constructor called for: " << other.ptr << std::endl;
         other.ptr = nullptr;
     }
 
@@ -137,6 +138,7 @@ public:
      * What should happen to the old pointer?
      */
     void reset(T* new_ptr = nullptr) {
+        std::cout << "Reset called for pointer: " << new_ptr << std::endl;
         delete ptr;
         ptr = new_ptr;
     }

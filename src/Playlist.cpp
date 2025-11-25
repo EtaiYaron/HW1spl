@@ -110,8 +110,8 @@ void Playlist::remove_track(const std::string& title) {
         }
 
         track_count--;
-        std::cout << "Removed '" << title << "' from playlist" << std::endl;
         delete current;
+        std::cout << "Removed '" << title << "' from playlist" << std::endl;
     } else {
         std::cout << "Track '" << title << "' not found in playlist" << std::endl;
     }
