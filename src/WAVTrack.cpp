@@ -49,6 +49,7 @@ double WAVTrack::get_quality_score() const {
         score += 5;
     if(score > 100.0)
         score = 100.0;
+        std::cout << "[WAVTrack::get_quality_score] \"" << title << "\" score = " << score << "/100\n";
     return score; 
 }
 

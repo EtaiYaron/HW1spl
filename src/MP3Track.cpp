@@ -48,6 +48,7 @@ double MP3Track::get_quality_score() const {
         score = 100.0;
     if(score < 0)
         score = 0.0;
+    std::cout << "[MP3Track::get_quality_score] \"" << title << "\" score = " << score << "/100\n";
     return score; 
 }
 
