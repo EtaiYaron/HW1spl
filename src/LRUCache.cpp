@@ -30,9 +30,11 @@ bool LRUCache::put(PointerWrapper<AudioTrack> track) {
         bool evicted = evictLRU();
         i = findEmptySlot();
         slots[i].store(std::move(track), ++access_counter);
+        displayStatus();
         return evicted;
     }
     slots[i].store(std::move(track), ++access_counter);
+    displayStatus();
     return false;
 }
 

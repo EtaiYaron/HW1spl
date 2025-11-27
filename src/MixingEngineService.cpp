@@ -68,6 +68,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     AudioTrack* released_track = wrapped_track.release();
     decks[target_deck] = released_track;
     std::cout << "[Load Complete] '" << released_track->get_title() << "' is now loaded on deck " << target_deck << std::endl;
+    displayDeckStatus();
 
     if (decks[active_deck] != nullptr) {
         std::cout << " [Unload] Unloading previous deck " << active_deck << "(" << decks[active_deck]->get_title() << ")" << std::endl;
