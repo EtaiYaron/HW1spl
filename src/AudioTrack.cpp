@@ -5,7 +5,7 @@
 
 AudioTrack::AudioTrack(const std::string& title, const std::vector<std::string>& artists, 
                       int duration, int bpm, size_t waveform_samples)
-    : title(title), artists(artists), duration_seconds(duration), bpm(bpm), 
+    : title(title), artists(artists), duration_seconds(duration), bpm(bpm), waveform_data(nullptr), 
       waveform_size(waveform_samples) {
 
     // Allocate memory for waveform analysis
@@ -32,9 +32,9 @@ AudioTrack::AudioTrack(const std::string& title, const std::vector<std::string>&
 
 AudioTrack::~AudioTrack() {
     delete[] this->waveform_data;
-    //#ifdef DEBUG
+    #ifdef DEBUG
     std::cout << "AudioTrack destructor called for: " << title << std::endl;    
-    //#endif
+    #endif
     
 }
 
@@ -87,7 +87,6 @@ AudioTrack::AudioTrack(AudioTrack&& other) noexcept :  title(other.title), artis
 }
 
 AudioTrack& AudioTrack::operator=(AudioTrack&& other) noexcept {
-    // TODO: Implement the move assignment operator
 
     #ifdef DEBUG
     std::cout << "AudioTrack move assignment called for: " << other.title << std::endl;

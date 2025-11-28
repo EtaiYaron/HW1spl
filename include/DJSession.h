@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "DJLibraryService.h"
@@ -39,7 +40,7 @@ private:
     ConfigurationManager config_manager;
     SessionConfig session_config;
     std::vector<std::string> track_titles;
-    bool play_all = false;
+    bool play_all;
     // Session statistics
     struct SessionStats {
         size_t tracks_processed = 0;
@@ -96,7 +97,6 @@ public:
     void simulate_dj_performance();
 
 
-
     // ========== STATUS & DISPLAY METHODS ==========
 
     const std::string& get_session_name() const { return session_name; }
@@ -111,6 +111,8 @@ private:
      * @return true if configuration loaded successfully
      */
     bool load_configuration();
+
+    void process_playlist(const std::string& name);
     
     /**
      * @brief Display available playlists from config and prompt user to select one
@@ -121,8 +123,4 @@ private:
      * @brief Print final session summary with statistics
      */
     void print_session_summary() const;
-
-
-    //we added this function to make simulate_dj_performance readable and usefull
-    void process_playlist(const std::string&);
 };

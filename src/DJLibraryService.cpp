@@ -8,13 +8,12 @@
 
 
 DJLibraryService::DJLibraryService(const Playlist& playlist) 
-    : playlist(playlist) {}
+    : playlist(playlist), library() {}
 /**
  * @brief Load a playlist from track indices referencing the library
  * @param library_tracks Vector of track info from config
  */
 void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>& library_tracks) {
-    std::cout << "[INFO] Building track library from config..." << std::endl;
     library = std::vector<AudioTrack*>();
     int cnt = 0;
     for (int i = 0; i < library_tracks.size(); i++) {
@@ -112,7 +111,7 @@ std::vector<std::string> DJLibraryService::getTrackTitles() const {
     std::vector<std::string> tracks_titles = std::vector<std::string>();
     for(AudioTrack* track : library){
         if(track != nullptr){
-            tracks_titles.push_back(track->get_title());
+            tracks_titles.insert(tracks_titles.begin(), track->get_title());
         }
     }
     return tracks_titles;

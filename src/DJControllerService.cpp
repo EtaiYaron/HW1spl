@@ -12,6 +12,7 @@ DJControllerService::DJControllerService(size_t cache_size)
 int DJControllerService::loadTrackToCache(AudioTrack& track) {
     if (cache.contains(track.get_title())) {
         cache.get(track.get_title());
+        displayCacheStatus();
         return 1;
     }
 
@@ -24,8 +25,9 @@ int DJControllerService::loadTrackToCache(AudioTrack& track) {
     track_clone->load();
     track_clone->analyze_beatgrid();
     PointerWrapper<AudioTrack> new_ptr(track_clone.release());
-    if (cache.put(std::move(new_ptr)))
-        return -1;
+    bool put = cache.put(std::move(new_ptr));
+    displayCacheStatus();
+    if (put) return -1;
     return 0;
 }
 

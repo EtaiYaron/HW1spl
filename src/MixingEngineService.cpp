@@ -7,11 +7,11 @@
  * TODO: Implement MixingEngineService constructor
  */
 MixingEngineService::MixingEngineService()
-    : active_deck(0), auto_sync(false), bpm_tolerance(0)
+    : decks(), active_deck(1), auto_sync(false), bpm_tolerance(0)
 {
     decks[0] = nullptr;
     decks[1] = nullptr;
-    std::cout << "[MixingEngineService] Initialized with 2 empty decks" << std::endl;
+    std::cout << "[MixingEngineService] Initialized with 2 empty decks." << std::endl;
 }
 
 /**
@@ -45,7 +45,9 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     PointerWrapper<AudioTrack> wrapped_track(cloned_track);
 
     size_t target_deck = 1 - active_deck;
+    bool initial = false;
     if (decks[0] == nullptr && decks[1] == nullptr) {
+        initial = true;
         target_deck = 0; 
         active_deck = 0; 
     }
@@ -68,15 +70,16 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     AudioTrack* released_track = wrapped_track.release();
     decks[target_deck] = released_track;
     std::cout << "[Load Complete] '" << released_track->get_title() << "' is now loaded on deck " << target_deck << std::endl;
-    displayDeckStatus();
-
-    if (decks[active_deck] != nullptr) {
-        std::cout << " [Unload] Unloading previous deck " << active_deck << "(" << decks[active_deck]->get_title() << ")" << std::endl;
-        delete decks[active_deck];
-        decks[active_deck] = nullptr;
-    }
+    size_t prev_active = active_deck;
     active_deck = target_deck;
     std::cout << "[Active Deck] Switched to deck " << target_deck << std::endl;
+    displayDeckStatus();
+
+    if (decks[prev_active] != nullptr && !initial) {
+        std::cout << " [Unload] Unloading previous deck " << prev_active << "(" << decks[prev_active]->get_title() << ")" << std::endl;
+        delete decks[prev_active];
+        decks[prev_active] = nullptr;
+    }
     return target_deck;
 }
 

@@ -9,7 +9,15 @@
 
 
 DJSession::DJSession(const std::string& name, bool play_all)
-    : session_name(name), play_all(play_all) {
+    : session_name(name),
+    library_service(),
+    controller_service(),
+    config_manager(),
+    session_config(),
+    track_titles(),
+    play_all(play_all),
+    stats()
+{
     std::cout << "DJ Session System initialized: " << session_name << std::endl;
 }
 
@@ -169,7 +177,7 @@ void DJSession::process_playlist(const std::string& name){
     }
     else{
         for(std::string track_title : track_titles){
-            std::cout << " \n-- Processing: " << track_title << " --\n";
+            std::cout << " \n--- Processing: " << track_title << " ---\n";
             stats.tracks_processed++;
             int val = load_track_to_controller(track_title);
             //it is alredy updated and logged in load_track_to_controller
