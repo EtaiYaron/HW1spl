@@ -12,6 +12,7 @@ DJSession::DJSession(const std::string& name, bool play_all)
     : session_name(name),
     library_service(),
     controller_service(),
+    mixing_service(),
     config_manager(),
     session_config(),
     track_titles(),
@@ -84,7 +85,7 @@ int DJSession::load_track_to_controller(const std::string& track_name) {
     else if (ret == 0)
         stats.cache_misses++;
     else {
-        stats.cache_hits++;
+        stats.cache_evictions++;
         stats.cache_misses++;
     }
     return ret;
@@ -162,10 +163,12 @@ void DJSession::simulate_dj_performance() {
     }
     else{
         std::string selected_playlist; 
-        do{
+        do {
             selected_playlist = display_playlist_menu_from_config();
-            process_playlist(selected_playlist);
-        }while(!selected_playlist.empty());
+            if (!selected_playlist.empty()) { 
+                process_playlist(selected_playlist);
+            }
+        } while(!selected_playlist.empty());
     }
     std::cout << "Session cancelled by user or all playlists played. \n";
 }
@@ -179,7 +182,7 @@ void DJSession::process_playlist(const std::string& name){
         for(std::string track_title : track_titles){
             std::cout << " \n--- Processing: " << track_title << " ---\n";
             stats.tracks_processed++;
-            int val = load_track_to_controller(track_title);
+            load_track_to_controller(track_title);
             //it is alredy updated and logged in load_track_to_controller
             load_track_to_mixer_deck(track_title);
             //it is alredy updated and logged in load_track_to_mixer_deck

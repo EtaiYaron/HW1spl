@@ -16,7 +16,7 @@ DJLibraryService::DJLibraryService(const Playlist& playlist)
 void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>& library_tracks) {
     library = std::vector<AudioTrack*>();
     int cnt = 0;
-    for (int i = 0; i < library_tracks.size(); i++) {
+    for (size_t i = 0; i < library_tracks.size(); i++) {
         SessionConfig::TrackInfo track = library_tracks[i];
         if (track.type == "MP3") {
             MP3Track* mp3_track = new MP3Track(track.title, track.artists, track.duration_seconds, track.bpm, track.extra_param1, track.extra_param2);
@@ -78,7 +78,8 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
     playlist = Playlist(playlist_name);
     int cnt =0;
     for(int idx : track_indices){
-        if(idx < 1 || idx > library.size()){
+        size_t index = static_cast<size_t>(idx);
+        if(index < 1 || index > library.size()){
             std::cerr << "[WARNING] Invalid track index: " << idx << std::endl;
             continue;
         }
@@ -119,8 +120,7 @@ std::vector<std::string> DJLibraryService::getTrackTitles() const {
 
 
 
-DJLibraryService::DJLibraryService(const DJLibraryService& other){
-    this->playlist = Playlist(other.playlist);
+DJLibraryService::DJLibraryService(const DJLibraryService& other): playlist(other.playlist) , library(){
     for(AudioTrack* ptr : other.library){
         AudioTrack* curr = ptr->clone().release();
         library.push_back(curr);
