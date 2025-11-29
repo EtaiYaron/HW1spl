@@ -116,3 +116,20 @@ std::vector<std::string> DJLibraryService::getTrackTitles() const {
     }
     return tracks_titles;
 }
+
+
+
+DJLibraryService::DJLibraryService(const DJLibraryService& other){
+    this->playlist = Playlist(other.playlist);
+    for(AudioTrack* ptr : other.library){
+        AudioTrack* curr = ptr->clone().release();
+        library.push_back(curr);
+    }
+}
+
+DJLibraryService::~DJLibraryService() {
+    for (AudioTrack* track : library) { 
+        delete track;
+    }
+    library.clear();
+}

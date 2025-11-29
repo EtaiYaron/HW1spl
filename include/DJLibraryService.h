@@ -14,7 +14,10 @@
 class DJLibraryService {
 public:
     DJLibraryService(const Playlist& playlist);
-    DJLibraryService(): playlist(), library(){}
+    DJLibraryService(): playlist(), library(){};
+    //need to add rule of 3
+    DJLibraryService(const DJLibraryService& other);
+    ~DJLibraryService();
 
     /**
      * @brief Build the track library from parsed config data
