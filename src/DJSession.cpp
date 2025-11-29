@@ -43,8 +43,7 @@ bool DJSession::load_playlist(const std::string& playlist_name)  {
     
     if (library_service.getPlaylist().is_empty()) {
         return false;
-    }
-    
+    } 
     track_titles = library_service.getTrackTitles();
     return true;
 }
@@ -170,7 +169,7 @@ void DJSession::simulate_dj_performance() {
             }
         } while(!selected_playlist.empty());
     }
-    std::cout << "Session cancelled by user or all playlists played. \n";
+    std::cout << "Session cancelled by user or all playlists played.\n";
 }
 
 // we added a function to make simulate_dj_performance more readable and usefull
@@ -180,7 +179,7 @@ void DJSession::process_playlist(const std::string& name){
     }
     else{
         for(std::string track_title : track_titles){           
-            std::cout << " \n--- Processing: " << track_title << " ---\n";
+            std::cout << "\n--- Processing: " << track_title << " ---\n";
             stats.tracks_processed++;
             load_track_to_controller(track_title);
             //it is alredy updated and logged in load_track_to_controller
@@ -189,6 +188,7 @@ void DJSession::process_playlist(const std::string& name){
             //it is alredy updated and logged in load_track_to_mixer_deck
         }
         print_session_summary();
+        /*
         stats.tracks_processed = 0;
         stats.cache_hits = 0;
         stats.cache_misses = 0;
@@ -197,6 +197,7 @@ void DJSession::process_playlist(const std::string& name){
         stats.deck_loads_b = 0;
         stats.transitions = 0;
         stats.errors = 0;
+        */
     }     
 }
 

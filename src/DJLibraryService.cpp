@@ -94,12 +94,12 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
                 track->load();
                 track->analyze_beatgrid();
                 playlist.add_track(track);
-                std::cout << "Added '" << track->get_title() << "' to playlist '" << playlist_name << "'\n";
+                //std::cout << "Added '" << track->get_title() << "' to playlist '" << playlist_name << "'\n";
                 cnt++;
             }
         } 
     }
-    std::cout<<"[INFO] Playlist loaded: "<< playlist_name << " (" << cnt << " tracks)\n";
+    std::cout<<"[INFO] Playlist loaded: "<< playlist_name << " (" << cnt << " tracks)" << std::endl;
     // For now, add a placeholder to fix the linker error
     //(void)playlist_name;  // Suppress unused parameter warning
     //(void)track_indices;  // Suppress unused parameter warning
@@ -110,9 +110,9 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
  */
 std::vector<std::string> DJLibraryService::getTrackTitles() const {
     std::vector<std::string> tracks_titles = std::vector<std::string>();
-    for(AudioTrack* track : library){
+    for(AudioTrack* track : playlist.getTracks()){
         if(track != nullptr){
-            tracks_titles.insert(tracks_titles.begin(), track->get_title());
+            tracks_titles.push_back(track->get_title());
         }
     }
     return tracks_titles;

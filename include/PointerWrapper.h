@@ -65,7 +65,9 @@ public:
      */
     PointerWrapper(PointerWrapper&& other) noexcept : ptr(other.ptr)
     {
+        #ifdef DEBUG
         std::cout << "Move constructor called for: " << other.ptr << std::endl;
+        #endif
         other.ptr = nullptr;
     }
 
