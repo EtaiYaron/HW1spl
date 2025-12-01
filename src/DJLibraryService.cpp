@@ -112,7 +112,7 @@ std::vector<std::string> DJLibraryService::getTrackTitles() const {
     std::vector<std::string> tracks_titles = std::vector<std::string>();
     for(AudioTrack* track : playlist.getTracks()){
         if(track != nullptr){
-            tracks_titles.push_back(track->get_title());
+            tracks_titles.insert(tracks_titles.begin(), track->get_title());
         }
     }
     return tracks_titles;
