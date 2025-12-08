@@ -38,7 +38,6 @@ bool LRUCache::put(PointerWrapper<AudioTrack> track) {
 
 bool LRUCache::evictLRU() {
     size_t lru = findLRUSlot();
-    std::cout << "LRU IS " << lru << std::endl;
     if (lru == max_size || !slots[lru].isOccupied()) return false;
     slots[lru].clear();
     return true;
